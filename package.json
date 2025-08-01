@@ -1,0 +1,27 @@
+{
+  "name": "vue-cli-plugin-javascript-obfuscator",
+  "version": "1.0.0",
+  "description": "Vue CLI plugin for JavaScript obfuscation using javascript-obfuscator@4.x",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nangongpo/vue-cli-plugin-javascript-obfuscator.git"
+  },
+  "keywords": [
+    "vue",
+    "vue-cli",
+    "javascript-obfuscator"
+  ],
+  "author": "nangongpo",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nangongpo/vue-cli-plugin-javascript-obfuscator/issues"
+  },
+  "homepage": "https://github.com/nangongpo/vue-cli-plugin-javascript-obfuscator#readme",
+  "dependencies": {
+    "javascript-obfuscator": "^4.0.0"
+  }
+}

@@ -88,6 +88,6 @@ module.exports = (api, options) => {
       }
     }
     // Instantiate and apply the plugin to the Webpack config
-    config.plugin('javascript-obfuscator').use(JavascriptObfuscatorPlugin)
+    webpackConfig.plugin('javascript-obfuscator').use(JavascriptObfuscatorPlugin)
   })
 }

@@ -22,19 +22,10 @@ Example Configuration:
 module.exports = {
   pluginOptions: {
     javascriptObfuscator: {
-      // Directory where your assets are located (default is 'static')
-      assetsDir: 'static', // Optional, defaults to 'static'
-
       // Files to include in obfuscation (can be a string or an array of strings/regex patterns)
       includes: [
         'app.*.js',
-        '**/chunk-libs.*.js$',  // Matches chunk-libs files for obfuscation
-      ],
-
-      // Files to exclude from obfuscation (can be a string or an array of strings/regex patterns)
-      excludes: [
-        'vendor.*.js',
-        '**/*-bundle.*.js$',  // Matches any file ending with -bundle for exclusion
+        '**/chunk-libs.*.js',  // Matches chunk-libs files for obfuscation
       ],
 
       // Options for the javascript-obfuscator

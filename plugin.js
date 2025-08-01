@@ -12,9 +12,8 @@ class JavascriptObfuscatorPlugin {
    * @param {string[]} [options.excludes] - Glob patterns for files to exclude.
    * @param {Object} [options.obfuscatorOptions] - Options for javascript-obfuscator.
    */
-  constructor({ includes = [], excludes = [], obfuscatorOptions = {} } = {}) {
-    this.includes = Array.isArray(includes) ? includes : [includes]
-    this.excludes = Array.isArray(excludes) ? excludes : [excludes]
+  constructor({ includes = [], obfuscatorOptions = {} } = {}) {
+    this.includes = Array.isArray(includes) ? includes : includes ? [includes] : []
     this.obfuscatorOptions = obfuscatorOptions
   }
 
@@ -22,57 +21,43 @@ class JavascriptObfuscatorPlugin {
     compiler.hooks.emit.tapAsync(
       'JavascriptObfuscatorPlugin',
       async (compilation, callback) => {
-        const promises = []
+        try {
+          const assetNames = Object.keys(compilation.assets)
+          const jsFiles = assetNames.filter(name => name.endsWith('.js'))
+          const needObfuscateFiles = jsFiles.filter(name => {
+            const included = this.includes.length ? micromatch.isMatch(name, this.includes) : false
+            return included
+          })
 
-        for (const assetName of Object.keys(compilation.assets)) {
-          // Include filter
-          if (
-            this.includes.length &&
-            !micromatch.isMatch(assetName, this.includes)
-          ) {
-            continue
-          }
-
-          // Exclude filter
-          if (micromatch.isMatch(assetName, this.excludes)) {
-            console.log(`Skipping obfuscation for: ${assetName}`)
-            continue
-          }
-
-          console.log(`Obfuscating: ${assetName}`)
-          const asset = compilation.assets[assetName]
-
-          promises.push(
-            new Promise((resolve, reject) => {
+          const promises = needObfuscateFiles.map(name => {
+            return new Promise((resolve, reject) => {
               try {
+                const asset = compilation.assets[name]
                 const obfuscatedCode = JavaScriptObfuscator.obfuscate(
                   asset.source(),
-                  {
-                    compact: true,
-                    disableConsoleOutput: false,
-                    rotateStringArray: true,
-                    identifierNamesGenerator: 'hexadecimal',
-                    selfDefending: true,
-                    ...this.obfuscatorOptions
-                  }
+                  this.obfuscatorOptions
                 ).getObfuscatedCode()
 
-                compilation.assets[assetName] = {
+                compilation.assets[name] = {
                   source: () => obfuscatedCode,
                   size: () => obfuscatedCode.length
                 }
 
+                console.log(`[Obfuscator] ✔ Obfuscated ${name}`)
                 resolve()
               } catch (err) {
-                console.error(`Failed to obfuscate ${assetName}:`, err)
+                console.error(`Failed to obfuscate ${name}:`, err)
                 reject(err)
               }
             })
-          )
-        }
+          })
 
-        await Promise.all(promises)
-        callback()
+          await Promise.all(promises)
+          callback()
+        } catch (error) {
+          console.error(`[Obfuscator] ✖ Build failed during obfuscation:`, error)
+          callback(error) // 传递错误让 Webpack 停止构建
+        }
       }
     )
   }

@@ -2,25 +2,6 @@
 const JavaScriptObfuscator = require('javascript-obfuscator')
 
 module.exports = (api) => {
-  // Automatically install javascript-obfuscator@4.x when the plugin is added
-  api.extendPackage({
-    devDependencies: {
-      'javascript-obfuscator': '^4.0.0' // Automatically add version 4.x
-    }
-  })
-
-  // Inject a feature for the plugin
-  api.injectFeature({
-    name: 'javascript-obfuscator',
-    description:
-      'A plugin to obfuscate JavaScript files using javascript-obfuscator',
-    enabled: true
-  })
-
-  /**
-   * Vue CLI chainWebpack hook to apply the JavaScript Obfuscator plugin.
-   * @param {object} config - The Webpack configuration object.
-   */
   api.chainWebpack((config) => {
     // Get user-configured options from vue.config.js
     const options =
@@ -36,10 +17,6 @@ module.exports = (api) => {
       : [options.excludes || []]
     const obfuscatorOptions = options.obfuscatorOptions || {}
 
-    /**
-     * Webpack plugin that obfuscates JavaScript assets.
-     * @param {object} compiler - Webpack compiler instance
-     */
     function JavascriptObfuscatorPlugin(compiler) {
       compiler.hooks.emit.tapAsync(
         'JavascriptObfuscatorPlugin',

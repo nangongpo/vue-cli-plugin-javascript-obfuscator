@@ -22,6 +22,7 @@
   },
   "homepage": "https://github.com/nangongpo/vue-cli-plugin-javascript-obfuscator#readme",
   "dependencies": {
-    "javascript-obfuscator": "^4.0.0"
+    "javascript-obfuscator": "^4.0.0",
+    "micromatch": "^4.0.8"
   }
 }

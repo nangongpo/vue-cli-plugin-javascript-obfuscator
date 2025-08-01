@@ -1,6 +1,6 @@
 {
   "name": "vue-cli-plugin-javascript-obfuscator",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Vue CLI plugin for JavaScript obfuscation using javascript-obfuscator@4.x",
   "main": "index.js",
   "scripts": {
